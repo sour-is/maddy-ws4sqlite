@@ -60,17 +60,20 @@ func (s *SQL) Init(cfg *config.Map) error {
 	}
 	s.db = db
 
-	bldr := ws4.NewRequestBuilder()
-	for _, init := range initQueries {
-		bldr.AddStatement(init)
-	}
-	req, err := bldr.Build()
-	if err != nil {
-		return config.NodeErr(cfg.Block, "failed to init db: %v", err)
-	}
-	_, _, err = db.Send(req)
-	if err != nil {
-		return config.NodeErr(cfg.Block, "failed to init db: %v", err)
+	if len(initQueries) > 0 {
+
+		bldr := ws4.NewRequestBuilder()
+		for _, init := range initQueries {
+			bldr.AddStatement(init)
+		}
+		req, err := bldr.Build()
+		if err != nil {
+			return config.NodeErr(cfg.Block, "failed to init db: %v", err)
+		}
+		_, _, err = db.Send(req)
+		if err != nil {
+			return config.NodeErr(cfg.Block, "failed to init db: %v", err)
+		}
 	}
 
 	return nil
@@ -125,8 +128,8 @@ func (s *SQL) LookupMulti(ctx context.Context, val string) ([]string, error) {
 		for _, s := range r.ResultSet {
 			for _, v := range s {
 				repl = append(repl, fmt.Sprint(v))
-				return repl, nil
 			}
+			return repl, nil
 		}
 	}
 	return repl, nil
@@ -155,8 +158,8 @@ func (s *SQL) Keys() ([]string, error) {
 		for _, s := range r.ResultSet {
 			for _, v := range s {
 				repl = append(repl, fmt.Sprint(v))
-				return repl, nil
 			}
+			return repl, nil
 		}
 	}
 	return repl, nil
