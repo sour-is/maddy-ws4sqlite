@@ -128,8 +128,8 @@ func (s *SQL) LookupMulti(ctx context.Context, val string) ([]string, error) {
 		for _, s := range r.ResultSet {
 			for _, v := range s {
 				repl = append(repl, fmt.Sprint(v))
+				break
 			}
-			return repl, nil
 		}
 	}
 	return repl, nil
