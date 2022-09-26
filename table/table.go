@@ -121,7 +121,11 @@ func (s *Table) LookupMulti(ctx context.Context, val string) ([]string, error) {
 		return nil, fmt.Errorf("%s: lookup-multi %s: %w", s.modName, val, err)
 	}
 	lis, err := s.sql.query(ctx, "M"+val, req)
-	return lis, fmt.Errorf("%s: lookup-multi: %w", s.modName, err)
+	if err != nil {
+		return lis, fmt.Errorf("%s: lookup-multi: %v %w ", s.modName, lis, err)
+
+	}
+	return lis, nil
 }
 
 func (s *Table) Keys() ([]string, error) {
@@ -254,7 +258,7 @@ func (s *cache) query(ctx context.Context, key string, req *ws4.Request) ([]stri
 		lastValid time.Time
 	}
 
-	refresh := func(ctx context.Context, cancel func()) (*cacheValue, error){
+	refresh := func(ctx context.Context, cancel func()) (*cacheValue, error) {
 		if cancel != nil {
 			defer cancel()
 		}
