@@ -10,7 +10,7 @@ import (
 	"github.com/foxcpp/maddy/framework/module"
 	lru "github.com/hashicorp/golang-lru"
 
-	ws4 "github.com/jonlundy/ws4sqlite-client-go"
+	ws4 "github.com/proofrock/ws4sqlite-client-go"
 )
 
 type Table struct {
